@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration(classes = {StockServiceImpl.class})
 @ExtendWith(SpringExtension.class)
-public class StockTest {
+class StockTest {
 
     @MockBean
     private StockRepository stockRepository;
