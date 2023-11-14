@@ -12,7 +12,9 @@ import tn.esprit.rh.achat.repositories.ProduitRepository;
 import tn.esprit.rh.achat.repositories.SecteurActiviteRepository;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -54,9 +56,8 @@ public class FournisseurServiceImpl implements IFournisseurService {
 
 	public Fournisseur updateFournisseur(Fournisseur f) {
 		DetailFournisseur df = saveDetailFournisseur(f);
-		f.setDetailFournisseur(df);	
-		fournisseurRepository.save(f);
-		return f;
+		f.setDetailFournisseur(df);
+		return fournisseurRepository.save(f);
 	}
 
 	@Override
@@ -67,7 +68,6 @@ public class FournisseurServiceImpl implements IFournisseurService {
 
 	@Override
 	public Fournisseur retrieveFournisseur(Long fournisseurId) {
-
 		Fournisseur fournisseur = fournisseurRepository.findById(fournisseurId).orElse(null);
 		return fournisseur;
 	}
@@ -76,12 +76,17 @@ public class FournisseurServiceImpl implements IFournisseurService {
 	public void assignSecteurActiviteToFournisseur(Long idSecteurActivite, Long idFournisseur) {
 		Fournisseur fournisseur = fournisseurRepository.findById(idFournisseur).orElse(null);
 		SecteurActivite secteurActivite = secteurActiviteRepository.findById(idSecteurActivite).orElse(null);
-        fournisseur.getSecteurActivites().add(secteurActivite);
-        fournisseurRepository.save(fournisseur);
-		
-		
+		if (fournisseur != null && secteurActivite != null) {
+			Set<SecteurActivite> secteurActivites = fournisseur.getSecteurActivites();
+			if (secteurActivites == null) {
+				secteurActivites = new HashSet<>();
+				fournisseur.setSecteurActivites(secteurActivites);
+			}
+			secteurActivites.add(secteurActivite);
+			fournisseurRepository.save(fournisseur);
+		} else {
+			throw new IllegalArgumentException("Invalid Fournisseur or SecteurActivite");
+		}
 	}
-
-	
 
 }
