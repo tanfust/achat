@@ -37,7 +37,7 @@ public class Fournisseur implements Serializable {
 	private CategorieFournisseur  categorieFournisseur;
 	@OneToMany(mappedBy="fournisseur")
 	@JsonIgnore
-	private Set<Facture> factures;
+	public Set<Facture> factures;
     @ManyToMany
     @JsonIgnore
     private Set<SecteurActivite> secteurActivites;
